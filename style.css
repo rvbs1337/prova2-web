@@ -17,6 +17,10 @@ td {
   box-sizing: border-box;
 }
 
+button{
+    cursor: pointer;
+}
+
 body{
     display: grid;
     font-family: 'Arial', sans-serif;
@@ -58,18 +62,18 @@ header form input:focus {
 
 header form button{
     position: absolute;
-    cursor: pointer;
     border: none;
     background: none;
     top: 0.5em;
     right: 0;
 }
 
-header svg{
-    cursor: pointer;
+header #svg{
+    background: none;
+    border: none;
     position: absolute;
     right: 10px;
-    top: 95px;
+    top: 90px;
 }
 
 dialog{
@@ -83,6 +87,52 @@ dialog{
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
 
+dialog[open]{
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+dialog form{
+    display: grid;
+    grid-template-columns: 15vw 15vw;
+    justify-content: space-around;
+    gap: 10px
+}
+
+.dialogInput{
+    width: inherit;
+    height: 2.5em;
+    border-radius: 6px;
+    border: 1px solid #c5c5c5;
+}
+
+
+dialog div{
+    display: flex;
+    flex-direction: column;
+}
+
+#fechar{
+    font-weight: bold;
+    font-size: 1.5em;
+    position: absolute;
+    background: none;
+    width: 2em;
+    height: 2em;
+    right: 1px;
+    top: 1px;
+    border: none;
+}
+
+#aplicar{
+    height: 2.5em;
+    border-radius: 5px;
+    border: none;
+    background-color: #4682b4;
+    color: white;
+}
+
 main{
     background-color: #f0f0f0;
     height: 70vh;
@@ -91,4 +141,13 @@ main{
 footer{
     background-color: #4682b4;
     height: 15vh;
+}
+
+@media (max-width: 980px) {
+    dialog form{
+        display: grid;
+        grid-template-columns: 40vw;
+        justify-content: space-around;
+        gap: 10px
+    }
 }
