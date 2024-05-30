@@ -143,6 +143,21 @@ footer{
     height: 15vh;
 }
 
+ul {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+}
+
+li {
+    display: flex;
+    width: 70vw;
+}
+li img{
+    width: 380px;
+}
+
 @media (max-width: 980px) {
     dialog form{
         display: grid;
