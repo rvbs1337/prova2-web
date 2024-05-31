@@ -18,16 +18,48 @@ function generateItens(data) {
   main.appendChild(ul);
 
   data.items.forEach((e) => {
-    console.log(JSON.parse(e.imagens));
+    console.log(e);
+
     const li = document.createElement("li");
     const img = document.createElement("img");
     const h2 = document.createElement("h2");
+    const p = document.createElement("p");
+    const div = document.createElement("div");
+    const p2 = document.createElement("p");
+    const p3 = document.createElement("p");
+    const bt = document.createElement("button");
+
+    li.classList.add("parent");
+
     img.src =
       "https://agenciadenoticias.ibge.gov.br/" +
       JSON.parse(e.imagens).image_intro;
+    img.classList.add("div1");
+
     h2.textContent = e.titulo;
+    h2.classList.add("div2");
+
+    p.textContent = e.introducao;
+    p.classList.add("div3");
+
+    p2.textContent = "#" + e.editorias;
+
+    p3.textContent = "Publicado " + e.data_publicacao;
+
+    div.classList.add("div4");
+
+    bt.textContent = "Leia Mais";
+    bt.addEventListener("click", () => {
+      window.open(e.link);
+    });
+
+    div.appendChild(p2);
+    div.appendChild(p3);
+    div.appendChild(bt);
     li.appendChild(img);
     li.appendChild(h2);
+    li.appendChild(p);
+    li.appendChild(div);
     ul.appendChild(li);
   });
 }
@@ -68,15 +100,23 @@ async function carregaNoticias() {
   try {
     var params = getSearchParams();
     console.log(params);
-    var linkParam = `?qtd=${params.qtd}`;
-    if (params.tipo) {
-      linkParam += `&tipo=${params.tipo}`;
-    }
-    if (params.de) {
-      linkParam += `&de=${params.de}`;
-    }
-    if (params.ate) {
-      linkParam += `&ate=${params.ate}`;
+    var linkParam = `?qtd=10`;
+    if (params) {
+      if (params.qtd) {
+        linkParam = `?qtd=${params.qtd}`;
+      }
+
+      if (params.tipo) {
+        linkParam += `&tipo=${params.tipo}`;
+      }
+
+      if (params.de) {
+        linkParam += `&de=${params.de}`;
+      }
+
+      if (params.ate) {
+        linkParam += `&ate=${params.ate}`;
+      }
     }
 
     const data = await fetch(
