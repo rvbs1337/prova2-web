@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", (e) => {
   // e.preventDefault()
+  closeDialogApply();
   carregaNoticias();
 });
 
@@ -62,6 +63,46 @@ function generateItens(data) {
     li.appendChild(div);
     ul.appendChild(li);
   });
+  console.log(data);
+
+  createPagination();
+}
+
+function createPagination() {
+  const main = document.querySelector("main");
+  const ul = document.createElement("ul");
+
+  ul.classList.add("pages");
+  main.appendChild(ul);
+
+  var x = 11;
+
+  const urlSearchParams = new URLSearchParams(location.search);
+  const pageAtual = parseInt(urlSearchParams.get("page"));
+  if (pageAtual > 6) {
+    x += pageAtual - 6;
+  }
+  for (let i = x - 10; i < x; i++) {
+    const bt = document.createElement("button");
+    const li = document.createElement("li");
+    bt.textContent = i;
+    bt.addEventListener("click", () => {
+      const url = new URL(window.location);
+      url.searchParams.set("page", i);
+      window.history.pushState({}, "", url);
+
+      carregaNoticias();
+
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0;
+    });
+    if (i == pageAtual) {
+      bt.classList.add("btAtual");
+    }
+
+    li.appendChild(bt);
+    ul.appendChild(li);
+  }
 }
 
 function closeDialogApply() {
@@ -72,6 +113,7 @@ function closeDialogApply() {
 
   const url = new URL(window.location);
   url.searchParams.set("qtd", qtd.value);
+  url.searchParams.set("page", 1);
   url.searchParams.set("tipo", tipo.value);
   url.searchParams.set("de", de.value);
   url.searchParams.set("ate", ate.value);
@@ -92,6 +134,7 @@ function getSearchParams() {
   params.tipo = urlSearchParams.get("tipo");
   params.de = urlSearchParams.get("de");
   params.ate = urlSearchParams.get("ate");
+  params.page = urlSearchParams.get("page");
 
   return params;
 }
@@ -99,11 +142,15 @@ function getSearchParams() {
 async function carregaNoticias() {
   try {
     var params = getSearchParams();
-    console.log(params);
-    var linkParam = `?qtd=10`;
+
+    var linkParam = `?qtd=10&page=1`;
     if (params) {
       if (params.qtd) {
         linkParam = `?qtd=${params.qtd}`;
+      }
+
+      if (params.page) {
+        linkParam += `&page=${params.page}`;
       }
 
       if (params.tipo) {
