@@ -167,7 +167,7 @@ async function carregaNoticias() {
     }
 
     const data = await fetch(
-      `http://servicodados.ibge.gov.br/api/v3/noticias/${linkParam}`
+      `https://servicodados.ibge.gov.br/api/v3/noticias/${linkParam}`
     );
 
     const jsonData = await data.json();
