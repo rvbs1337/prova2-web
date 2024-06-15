@@ -75,6 +75,16 @@ header #svg{
     top: 90px;
 }
 
+#qtdFilter {
+    position: absolute;
+    background-color: white;
+    border-radius: 50%;
+    height: 15px;
+    width: 15px;
+    left: 18px;
+    top: 13px;
+}
+
 dialog{
     margin: auto;
     position: relative;

@@ -11,11 +11,15 @@ function closeDialog() {
   document.querySelector("#dialogFiltro").close();
 }
 
-function generateItens(data) {
+function generateItens(data, qtdFilter) {
   const main = document.querySelector("main");
+  const header = document.querySelector("header")
   main.innerHTML = "";
   const ul = document.createElement("ul");
   main.appendChild(ul);
+
+  const p = document.querySelector("#qtdFilter");
+  p.textContent = qtdFilter;
 
   data.items.forEach((e) => {
     console.log(e);
@@ -44,7 +48,28 @@ function generateItens(data) {
 
     p2.textContent = "#" + e.editorias;
 
-    p3.textContent = "Publicado " + e.data_publicacao;
+    let dataAtual = new Date();
+
+    const dataPostagemArray = e.data_publicacao.split('T');
+    const dataPostagemStr = dataPostagemArray[0];
+
+    const dataPostagem = new Date(dataPostagemStr);
+
+    const diferencaMilissegundos = dataAtual - dataPostagem;
+
+    const umDiaEmMilissegundos = 24 * 60 * 60 * 1000;
+    const diferencaDias = Math.floor(diferencaMilissegundos / umDiaEmMilissegundos);
+    
+    let publicado = '';
+    if (diferencaDias === 0) {
+      publicado = "hoje";
+    } else if (diferencaDias === 1) {
+      publicado = 'ontem';
+    } else {
+      publicado = diferencaDias + " dias atras";
+    }
+
+    p3.textContent = "Publicado " + publicado;
 
     div.classList.add("div4");
 
@@ -143,6 +168,7 @@ function getSearchParams() {
 
 async function carregaNoticias() {
   try {
+    var qtdFilter = 1;
     var params = getSearchParams();
 
     var linkParam = `?qtd=10&page=1`;
@@ -157,14 +183,17 @@ async function carregaNoticias() {
 
       if (params.tipo) {
         linkParam += `&tipo=${params.tipo}`;
+        qtdFilter++;
       }
 
       if (params.de) {
         linkParam += `&de=${params.de}`;
+        qtdFilter++;
       }
 
       if (params.ate) {
         linkParam += `&ate=${params.ate}`;
+        qtdFilter++;
       }
 
       if (params.busca) {
@@ -175,16 +204,16 @@ async function carregaNoticias() {
     const data = await fetch(
       `https://servicodados.ibge.gov.br/api/v3/noticias/${linkParam}`
     );
-    
+
     const jsonData = await data.json();
 
-    generateItens(jsonData);
+    generateItens(jsonData, qtdFilter);
   } catch (error) {
     console.error(error);
   }
 }
 
-document.querySelector("#buscaNoticia").addEventListener("click",(e)=>{
+document.querySelector("#buscaNoticia").addEventListener("click", (e) => {
   e.preventDefault()
   const busca = document.querySelector("#consultaNoticia").value
   const url = new URL(window.location);
