@@ -1,5 +1,4 @@
-document.addEventListener("DOMContentLoaded", (e) => {
-  // e.preventDefault()
+document.addEventListener("DOMContentLoaded", () => {
   closeDialogApply();
   carregaNoticias();
 });
@@ -65,24 +64,24 @@ function generateItens(data) {
   });
   console.log(data);
 
-  createPagination();
+  createPagination(data.totalPages);
 }
 
-function createPagination() {
+function createPagination(maxX) {
   const main = document.querySelector("main");
   const ul = document.createElement("ul");
 
   ul.classList.add("pages");
   main.appendChild(ul);
 
-  var x = 11;
+  var x = maxX < 11 ? maxX : 11;
 
   const urlSearchParams = new URLSearchParams(location.search);
   const pageAtual = parseInt(urlSearchParams.get("page"));
   if (pageAtual > 6) {
     x += pageAtual - 6;
   }
-  for (let i = x - 10; i < x; i++) {
+  for (let i = x - 10 < 0 ? 1 : x - 10; i < x; i++) {
     const bt = document.createElement("button");
     const li = document.createElement("li");
     bt.textContent = i;
@@ -110,6 +109,7 @@ function closeDialogApply() {
   const tipo = document.querySelector("#tipo");
   const de = document.querySelector("#de");
   const ate = document.querySelector("#ate");
+  const busca = document.querySelector("#consultaNoticia");
 
   const url = new URL(window.location);
   url.searchParams.set("qtd", qtd.value);
@@ -117,6 +117,7 @@ function closeDialogApply() {
   url.searchParams.set("tipo", tipo.value);
   url.searchParams.set("de", de.value);
   url.searchParams.set("ate", ate.value);
+  url.searchParams.set("busca", busca.value);
   window.history.pushState({}, "", url);
 
   closeDialog();
@@ -135,6 +136,7 @@ function getSearchParams() {
   params.de = urlSearchParams.get("de");
   params.ate = urlSearchParams.get("ate");
   params.page = urlSearchParams.get("page");
+  params.busca = urlSearchParams.get("busca");
 
   return params;
 }
@@ -164,16 +166,36 @@ async function carregaNoticias() {
       if (params.ate) {
         linkParam += `&ate=${params.ate}`;
       }
+
+      if (params.busca) {
+        linkParam += `&busca=${params.busca}`
+      }
     }
 
     const data = await fetch(
       `https://servicodados.ibge.gov.br/api/v3/noticias/${linkParam}`
     );
-
+    
     const jsonData = await data.json();
 
     generateItens(jsonData);
   } catch (error) {
     console.error(error);
   }
+}
+
+document.querySelector("#buscaNoticia").addEventListener("click",(e)=>{
+  e.preventDefault()
+  const busca = document.querySelector("#consultaNoticia").value
+  const url = new URL(window.location);
+  url.searchParams.set("busca", busca);
+  window.history.pushState({}, "", url);
+  carregaNoticias();
+})
+
+function busca() {
+  const busca = document.querySelector("#consultaNoticia").value
+  const url = new URL(window.location);
+  url.searchParams.set("busca", busca);
+  window.history.pushState({}, "", url);
 }
