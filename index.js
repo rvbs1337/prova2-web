@@ -13,7 +13,7 @@ function closeDialog() {
 
 function generateItens(data, qtdFilter) {
   const main = document.querySelector("main");
-  const header = document.querySelector("header")
+  const header = document.querySelector("header");
   main.innerHTML = "";
   const ul = document.createElement("ul");
   main.appendChild(ul);
@@ -50,7 +50,7 @@ function generateItens(data, qtdFilter) {
 
     let dataAtual = new Date();
 
-    const dataPostagemArray = e.data_publicacao.split('T');
+    const dataPostagemArray = e.data_publicacao.split("T");
     const dataPostagemStr = dataPostagemArray[0];
 
     const dataPostagem = new Date(dataPostagemStr);
@@ -58,15 +58,17 @@ function generateItens(data, qtdFilter) {
     const diferencaMilissegundos = dataAtual - dataPostagem;
 
     const umDiaEmMilissegundos = 24 * 60 * 60 * 1000;
-    const diferencaDias = Math.floor(diferencaMilissegundos / umDiaEmMilissegundos);
-    
-    let publicado = '';
+    const diferencaDias = Math.floor(
+      diferencaMilissegundos / umDiaEmMilissegundos
+    );
+
+    let publicado = "";
     if (diferencaDias === 0) {
       publicado = "hoje";
     } else if (diferencaDias === 1) {
-      publicado = 'ontem';
+      publicado = "ontem";
     } else {
-      publicado = diferencaDias + " dias atras";
+      publicado = "há " + diferencaDias + " dias";
     }
 
     p3.textContent = "Publicado " + publicado;
@@ -197,7 +199,7 @@ async function carregaNoticias() {
       }
 
       if (params.busca) {
-        linkParam += `&busca=${params.busca}`
+        linkParam += `&busca=${params.busca}`;
       }
     }
 
@@ -214,16 +216,16 @@ async function carregaNoticias() {
 }
 
 document.querySelector("#buscaNoticia").addEventListener("click", (e) => {
-  e.preventDefault()
-  const busca = document.querySelector("#consultaNoticia").value
+  e.preventDefault();
+  const busca = document.querySelector("#consultaNoticia").value;
   const url = new URL(window.location);
   url.searchParams.set("busca", busca);
   window.history.pushState({}, "", url);
   carregaNoticias();
-})
+});
 
 function busca() {
-  const busca = document.querySelector("#consultaNoticia").value
+  const busca = document.querySelector("#consultaNoticia").value;
   const url = new URL(window.location);
   url.searchParams.set("busca", busca);
   window.history.pushState({}, "", url);
